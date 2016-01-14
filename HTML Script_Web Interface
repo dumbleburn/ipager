@@ -1,0 +1,162 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>iPager | Message</title>
+<link href="http://fonts.googleapis.com/css?family=Bitter" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="ipager.css"/>
+
+<script>
+    var notify = "N" ;
+    var dOver120Characters = "Your message is over 40 Characters!\n\nPlease reduce the message to 40 characters or less.";
+
+    var MAXCHAR=40;
+
+
+function validate()  {
+
+var pass=document.forms["chat"]["pass"].value;
+var rname=document.forms["chat"]["recipient"].value;
+var message=document.forms["chat"]["message"].value;
+
+if (pass==""||pass==null)
+{
+document.getElementById("key").style.color="#DC143C";
+document.getElementById("skey").style.backgroundColor="#DC143C";
+}
+else
+{
+document.getElementById("key").style.color="#2A88AD";
+document.getElementById("skey").style.backgroundColor="#2A88AD";
+}
+
+if (rname==""||rname==null)
+26
+{
+document.getElementById("re").style.color="#DC143C";
+document.getElementById("sre").style.backgroundColor="#DC143C";
+}
+else
+{
+document.getElementById("re").style.color="#2A88AD";
+document.getElementById("sre").style.backgroundColor="#2A88AD";
+}
+
+if (message==""||message==null)
+{
+document.getElementById("mess").style.color="#DC143C";
+document.getElementById("smess").style.backgroundColor="#DC143C";
+return false;
+}
+else
+{
+document.getElementById("mess").style.color="#2A88AD";
+document.getElementById("smess").style.backgroundColor="#2A88AD";
+}
+}
+
+function disclaimer() {
+	if (document.chat.message.value.length > MAXCHAR) {
+		alert(dOver120Characters);		document.chat.message.focus();
+		return false;	
+        }else{
+           return true;
+
+        }
+}
+		    
+function count_letters(){
+    total_length = document.chat.message.value.length;
+    document.chat.tCharacterCount.value = (MAXCHAR - total_length);
+    if (total_length > MAXCHAR){
+      if (notify == "N") {
+        alert("The maximum number of characters\nthat can be to be entered is " + MAXCHAR + ".\n\n You have entered " + total_length + ".");
+        notify = "Y";
+      }
+    }
+}
+
+function onPressCounter(){    total_length = (document.chat.message.value.length + 1);
+    document.chat.tCharacterCount.value = (MAXCHAR - total_length);
+    if (total_length > MAXCHAR) {      if (notify == "N") {
+        alert("The maximum number of characters\nthat can be entered is " + MAXCHAR + ".\n\n You have entered " + total_length + ".");
+        notify = "Y";      }
+
+    }
+}
+
+function beanCounter(){	document.chat.tCharacterCount.value=document.chat.message.value.length;
+}
+
+function resetMessage() {
+    document.chat.subject.value="";
+    document.chat.message.value="";
+    document.chat.tCharacterCount.value=MAXCHAR;
+    notify = "N" ;
+}
+
+</script>
+</head>
+
+<body>
+
+<div class="menu">
+<ul>
+  <li><a href="index.php" class="active"><span>Send a message</span></a></li>
+   <li><a href="about.php"><span>About iPager</span></a></li>
+   <li><a href="team.php"><span>The Team</span></a></li>
+   <li><a href="feedback.php"><span>Feedback</span></a></li>
+</ul>
+</div>
+
+<div class="chat">
+<h1>i-Pager<span>Quick and easy way to send messages</span></h1>
+<form name="chat" onsubmit="return validate()" method="post" action="arduino_client.php">
+
+    <div class="section" id="key"><span id="skey">1</span>Pass Key</div>
+        <div class="inner-wrap">
+        <label> <input type="password" name="pass" id="pass" placeholder="Pass key" maxlength="5"/></label>
+    </div>
+<div class="section"  id="re"><span id="sre">2</span>Recipient's Name</div>
+        <div class="inner-wrap">
+        <label> <input type="text" name="recipient" id="recipient" placeholder="Recipient's Name"/></label>
+    </div>
+<div class="section" id="mess"><span id="smess">3</span>Message</div>
+        <div class="inner-wrap">
+        <label> <textarea name="message" id="message" SIZE="40" maxlength="40" WRAP="on" onChange="count_letters()" onKeyPress="onPressCounter()" onBlur="count_letters()" placeholder="Message"></textarea></label>
+<input type="text" name="tCharacterCount" value="40" size="4" onFocus="this.blur()" onBlur="document.chat.message.focus()" id="count"/>
+            </div>
+            <div class="section"><span>4</span>Blinker Notification</div>
+
+
+  <div class="inner-wrap"> ddd
+        <label id="b1"><input type="checkbox" name="blinker" id="blinker"/> Notify</label>
+    </div>
+    <div class="button-section">
+     <input type="submit" name="send" value="Send"/>&nbsp;&nbsp;<input type="reset" name="clear" value="Clear"/>
+    </div>
+    <div class="inner-wrap">
+<?php
+
+include('lib.php');
+$query=mysql_query("select * from `messages` ORDER BY `rank` DESC LIMIT 1");
+
+if(mysql_num_rows($query)==1)
+{
+$row=mysql_fetch_array($query);
+$id=$row['id'];
+$time=$row['time'];
+echo "<br><i style='color:#888'>Last message sent by ".$id." at ".$time."</i>";
+}
+
+?>
+</div>
+</form>
+</div>
+
+<div class="company">
+<p>VIT University</p>
+</div>
+
+</body>
+</html>
