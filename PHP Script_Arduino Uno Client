@@ -1,0 +1,32 @@
+<?php
+
+include('lib.php');
+$pass=$_POST['pass'];
+$recipient=$_POST['recipient'];
+$query1=mysql_query("select * from `record` where `pass`='$pass' limit 1");
+
+if(mysql_num_rows($query1)>=1)
+{
+$message=$_POST['message'];
+$message='['.$message.']';
+$file="Messages/msg.txt";
+$file_open=fopen($file,"w");
+$file_write=fwrite($file_open, $message);
+
+$row=mysql_fetch_array($query1);
+$id=$row['id'];
+$query2=mysql_query("insert into `messages`(`id`, `message`, `recipient`) values('$id','$message','$recipient')");
+
+if(!$file_write) 
+echo "Error.";
+else
+header("location:index.php");
+}
+else {?>
+<script>
+alert("Invalid pass key!");
+window.location="index.php";
+</script>
+<?php
+}
+?>
